@@ -5,7 +5,6 @@ MySQL
 Gitlens
 
 Core tools:
-XAMPP  ---------> uns Apache (web server) + MySQL (database) locally
 wordpress ------> download and extract into XAMPP's htdocs folder
 .net sdk
 github desktop
