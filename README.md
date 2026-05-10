@@ -1,6 +1,5 @@
 VS code extensions:
 C# dev kit
-PHP intelephense
 MySQL
 Gitlens
 
@@ -9,6 +8,7 @@ XAMPP
 wordpress kolun serveri
 .net sdk
 github desktop
+XAMPP
 
 En oo ihan varma viel mitä tarvii, mut tossa on jotain mitä AI sano et vois tarvita
 
