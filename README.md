@@ -5,7 +5,8 @@ MySQL
 Gitlens
 
 Core tools:
-wordpress ------> download and extract into XAMPP's htdocs folder
+XAMPP
+wordpress kolun serveri
 .net sdk
 github desktop
 

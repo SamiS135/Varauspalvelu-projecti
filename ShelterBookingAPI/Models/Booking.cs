@@ -31,9 +31,15 @@ public class Booking {
     public string? Phone { get; set; }
     
     /// <summary>
-    /// Viittaus varattavaan eläimeen (Animal.Id)
+    /// Viittaus varauksen tekijään (User.Id)
     /// </summary>
-    public int AnimalId { get; set; }
+    public int UserId { get; set; }
+    
+    /// <summary>
+    /// Varattavan eläimen laji (esim. "cat", "dog").
+    /// Käytetään kun käyttäjä valitsee eläinlomakkeelta lajin.
+    /// </summary>
+    public string? AnimalSpecies { get; set; }
     
     /// <summary>
     /// Palvelutyyppi (esim. "grooming"=kylpeminen, "training"=koulutus, "daycare"=päivähoito)

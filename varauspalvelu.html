@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eläinsuojan Varauspalvelu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav h1 {
+            color: #ff69b4;
+            font-size: 24px;
+        }
+
+        nav button {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        nav button:hover {
+            background: #ff1493;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        /* AUTH STYLES */
+        .auth-section {
+            display: none;
+        }
+
+        .auth-section.active {
+            display: block;
+        }
+
+        .auth-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .auth-section input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .auth-section button {
+            width: 100%;
+            padding: 12px;
+            background: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .auth-section button:hover {
+            background: #ff1493;
+        }
+
+        .auth-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .auth-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .auth-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .auth-toggle {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .auth-toggle a {
+            color: #ff69b4;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .auth-toggle a:hover {
+            text-decoration: underline;
+        }
+
+        /* BOOKING FORM STYLES */
+        .booking-section {
+            display: none;
+        }
+
+        .booking-section.active {
+            display: block;
+        }
+
+        .booking-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #ff69b4;
+            box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
+        }
+
+        .booking-section button {
+            width: 100%;
+            padding: 12px;
+            background: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .booking-section button:hover {
+            background: #ff1493;
+        }
+
+        .booking-message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .booking-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .booking-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .palvelut-lista {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .palvelut-lista h4 {
+            margin-bottom: 10px;
+        }
+
+        .palvelut-lista label {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            cursor: pointer;
+        }
+
+        .palvelut-lista input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .hinta-yhteensa {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 15px 0;
+            display: none;
+        }
+
+        /* DASHBOARD STYLES */
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .dashboard-section h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .varaus-kortti {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #ff69b4;
+        }
+
+        .varaus-kortti strong {
+            color: #ff69b4;
+        }
+
+        .varaus-kortti p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .varaus-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .varaus-status.confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .varaus-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .empty-message {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+        }
+
+        nav .user-info {
+            color: #666;
+            margin-right: 20px;
+        }
+
+        nav .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION -->
+    <nav>
+        <h1>🐾 Eläinsuojan Varauspalvelu</h1>
+        <div class="nav-buttons">
+            <span class="user-info" id="user-info" style="display: none;"></span>
+            <button onclick="naytaVaraukset()" id="varaukset-btn" style="display: none;">📋 Varaukset</button>
+            <button onclick="naytaDashboard()" id="dashboard-btn" style="display: none;">📊 Omat varaukset</button>
+            <button onclick="kirjauduUlos()" id="logout-btn" style="display: none;">🚪 Kirjaudu ulos</button>
+            <button onclick="naytaKirjautuminen()" id="login-btn">🔐 Kirjaudu</button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+
+        <!-- ===== KIRJAUTUMINEN ===== -->
+        <div class="auth-section active" id="kirjautuminen">
+            <h2>Kirjaudu sisään</h2>
+            <div class="auth-message" id="login-message"></div>
+            
+            <div class="form-group">
+                <label>Sähköposti</label>
+                <input type="email" id="login-email" placeholder="sähköposti@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Salasana</label>
+                <input type="password" id="login-password" placeholder="Salasana">
+            </div>
+
+            <button onclick="kirjaudu()">Kirjaudu</button>
+
+            <div class="auth-toggle">
+                Ei tunnuksia? <a onclick="naytaRekisterointi()">Rekisteröidy</a>
+            </div>
+        </div>
+
+        <!-- ===== REKISTERÖINTI ===== -->
+        <div class="auth-section" id="rekisterointi">
+            <h2>Rekisteröidy</h2>
+            <div class="auth-message" id="register-message"></div>
+            
+            <div class="form-group">
+                <label>Käyttäjänimi</label>
+                <input type="text" id="register-username" placeholder="Käyttäjänimi">
+            </div>
+
+            <div class="form-group">
+                <label>Sähköposti</label>
+                <input type="email" id="register-email" placeholder="sähköposti@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Salasana</label>
+                <input type="password" id="register-password" placeholder="Salasana">
+            </div>
+
+            <div class="form-group">
+                <label>Puhelinnumero (valinnainen)</label>
+                <input type="tel" id="register-phone" placeholder="0401234567">
+            </div>
+
+            <button onclick="rekisteroidy()">Rekisteröidy</button>
+
+            <div class="auth-toggle">
+                On jo tunnus? <a onclick="naytaKirjautuminen()">Kirjaudu</a>
+            </div>
+        </div>
+
+        <!-- ===== VARAUSLOMAKE ===== -->
+        <div class="booking-section" id="varaus">
+            <h2>🐾 Tee uusi varaus</h2>
+            <div class="booking-message" id="booking-message"></div>
+
+            <div class="form-group">
+                <label>Etunimi</label>
+                <input type="text" id="etunimi" placeholder="Etunimi">
+            </div>
+
+            <div class="form-group">
+                <label>Sukunimi</label>
+                <input type="text" id="sukunimi" placeholder="Sukunimi">
+            </div>
+
+            <div class="form-group">
+                <label>Sähköposti</label>
+                <input type="email" id="booking-email" placeholder="sähköposti@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Puhelinnumero</label>
+                <input type="tel" id="booking-phone" placeholder="0401234567">
+            </div>
+
+            <div class="form-group">
+                <label>Palvelu</label>
+                <select id="palvelu" onchange="paivitaLomake()">
+                    <option value="">-- Valitse palvelu --</option>
+                    <option value="hoitola">Hoitola</option>
+                    <option value="hotelli">Hotelli</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Eläin</label>
+                <select id="elain" onchange="haeHinnat()">
+                    <option value="">-- Valitse eläin --</option>
+                    <option value="cat" data-species="cat">Kissa</option>
+                    <option value="dog" data-species="dog">Koira</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="alkupvm-label">Saapumispäivä</label>
+                <input type="date" id="alkupvm">
+            </div>
+
+            <div class="form-group" id="loppupvm-div" style="display: none;">
+                <label>Loppupäivä</label>
+                <input type="date" id="loppupvm">
+            </div>
+
+            <div class="palvelut-lista" id="palvelut-lista"></div>
+
+            <div class="hinta-yhteensa" id="hinta-yhteensa">
+                Yhteensä: <span id="hinta">0</span>€
+            </div>
+
+            <button onclick="lahetaVaraus()">Tee varaus</button>
+        </div>
+
+        <!-- ===== DASHBOARD ===== -->
+        <div class="dashboard-section" id="dashboard">
+            <h2>📊 Omat varaukset</h2>
+            <div id="varaukset-lista"></div>
+        </div>
+
+    </div>
+
+    <script>
+        const API = 'http://localhost:5144';
+        let valitutPalvelut = [];
+        let perusHinta = 0;
+
+        // ===== KIRJAUTUMINEN =====
+        window.onload = function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                naytaDashboard();
+            }
+        };
+
+        async function kirjaudu() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            if (!email || !password) {
+                naytaViestiAuth('login-message', '❌ Täytä kaikki kentät', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    naytaViestiAuth('login-message', '❌ ' + (data.message || 'Kirjautuminen epäonnistui'), 'error');
+                    return;
+                }
+                
+                // Tallenna tunnukset - userId tallennetaan numerona
+                const userId = data.userId || data.UserId;
+                if (!userId || userId <= 0) {
+                    naytaViestiAuth('login-message', '❌ Virhe: userId puuttuu vastauksesta', 'error');
+                    console.error('API vastaus:', data);
+                    return;
+                }
+                
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('userId', userId.toString());
+                localStorage.setItem('username', data.username || data.Username || '');
+                localStorage.setItem('email', email);
+                
+                console.log('Kirjautuminen onnistui. Tallennettu userId:', userId);
+                naytaDashboard();
+            } catch (err) {
+                console.error(err);
+                naytaViestiAuth('login-message', '❌ Yhteysvirhe — tarkista API', 'error');
+            }
+        }
+
+        async function rekisteroidy() {
+            const username = document.getElementById('register-username').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const phone = document.getElementById('register-phone').value.trim();
+
+            if (!username || !email || !password) {
+                naytaViestiAuth('register-message', '❌ Täytä pakolliset kentät', 'error');
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username,
+                        email,
+                        password,
+                        phone
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    naytaViestiAuth('register-message', '❌ ' + (data.message || 'Rekisteröinti epäonnistui'), 'error');
+                    return;
+                }
+                
+                // Tallenna userId ja email jos saatiin vastauksessa
+                if (data.userId) {
+                    localStorage.setItem('userId', data.userId);
+                }
+                if (data.email) {
+                    localStorage.setItem('email', data.email);
+                }
+                
+                naytaViestiAuth('register-message', '✅ Rekisteröityminen onnistui! Kirjaudu nyt sisään.', 'success');
+                setTimeout(() => naytaKirjautuminen(), 2000);
+            } catch (err) {
+                console.error(err);
+                naytaViestiAuth('register-message', '❌ Yhteysvirhe — tarkista API', 'error');
+            }
+        }
+
+        // ===== VARAUS LOMAKE =====
+        async function haeElaimet() {
+            // Lomakkeessa tarjotaan suoraan lajit: kissa tai koira.
+            // Tästä funktiosta voi laajentaa myöhemmin, mutta nyt se vain varmistaa, että
+            // select on oletusarvoissa.
+            const select = document.getElementById('elain');
+            if (!select) return;
+            select.value = '';
+        }
+
+        function paivitaLomake() {
+            const palvelu = document.getElementById('palvelu').value;
+            const loppupvm = document.getElementById('loppupvm-div');
+            const alkuLabel = document.getElementById('alkupvm-label');
+
+            if (palvelu === 'hotelli') {
+                loppupvm.style.display = 'block';
+                alkuLabel.innerText = 'Saapumispäivä';
+            } else {
+                loppupvm.style.display = 'none';
+                alkuLabel.innerText = 'Päivämäärä';
+            }
+            haeHinnat();
+        }
+
+        async function haeHinnat() {
+            const palvelu = document.getElementById('palvelu').value;
+            const elainSelect = document.getElementById('elain');
+            const species = elainSelect.options[elainSelect.selectedIndex]?.getAttribute('data-species');
+
+            if (!palvelu || !species) return;
+
+            try {
+                const res = await fetch(`${API}/api/price/${species}/${palvelu}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                
+                const hinnat = await res.json();
+                const lista = document.getElementById('palvelut-lista');
+                lista.innerHTML = '<h4>Lisäpalvelut</h4>';
+                perusHinta = 0;
+                valitutPalvelut = [];
+
+                hinnat.forEach(h => {
+                    if (h.serviceName === 'Perushoito' || h.serviceName === 'Yöpyminen') {
+                        perusHinta = h.amount;
+                    } else {
+                        lista.innerHTML += `
+                            <label>
+                                <input type="checkbox" value="${h.amount}" data-nimi="${h.serviceName}" onchange="laskeHinta()">
+                                ${h.serviceName} — ${h.amount}€
+                            </label>`;
+                    }
+                });
+
+                document.getElementById('palvelut-lista').style.display = 'block';
+                document.getElementById('hinta-yhteensa').style.display = 'block';
+                laskeHinta();
+            } catch(err) {
+                console.error('Hintojen haku epäonnistui:', err);
+            }
+        }
+
+        function laskeHinta() {
+            let yhteensa = perusHinta;
+            const checkboxes = document.querySelectorAll('#palvelut-lista input:checked');
+            checkboxes.forEach(cb => {
+                yhteensa += parseFloat(cb.value);
+            });
+            document.getElementById('hinta').innerText = yhteensa.toFixed(2);
+        }
+
+        async function lahetaVaraus() {
+            const token = localStorage.getItem('token');
+            const userIdStr = localStorage.getItem('userId');
+            const userId = userIdStr ? parseInt(userIdStr) : null;
+
+            console.log('LocalStorage userId (string):', userIdStr);
+            console.log('Parsed userId (int):', userId);
+            console.log('Token olemassa:', !!token);
+
+            if (!token) {
+                naytaViestiBooking('❌ Tunnus ei ole tallentunut. Kirjaudu uudelleen.', 'error');
+                return;
+            }
+
+            if (!userId || userId <= 0) {
+                naytaViestiBooking('❌ Käyttäjän ID puuttuu. Kirjaudu uudelleen.', 'error');
+                console.error('Virhe: userId on null, undefined tai 0. Arvo:', userId);
+                return;
+            }
+
+            const etunimi = document.getElementById('etunimi').value.trim();
+            const sukunimi = document.getElementById('sukunimi').value.trim();
+            const email = document.getElementById('booking-email').value.trim();
+            const puhelin = document.getElementById('booking-phone').value.trim();
+            const palvelu = document.getElementById('palvelu').value;
+            const elainSelect = document.getElementById('elain');
+            const alkupvm = document.getElementById('alkupvm').value;
+            const loppupvm = document.getElementById('loppupvm').value || alkupvm;
+
+            if (!etunimi || !sukunimi || !email || !palvelu || !elainSelect.value || !alkupvm) {
+                naytaViestiBooking('❌ Täytä kaikki pakolliset kentät', 'error');
+                return;
+            }
+
+            const species = elainSelect.options[elainSelect.selectedIndex]?.getAttribute('data-species');
+            const varaus = {
+                userId: parseInt(userId),
+                firstName: etunimi,
+                lastName: sukunimi,
+                email: email,
+                phone: puhelin,
+                animalSpecies: species,
+                serviceType: palvelu,
+                startDate: new Date(alkupvm + 'T00:00:00').toISOString(),
+                endDate: new Date(loppupvm + 'T00:00:00').toISOString(),
+                totalPrice: parseFloat(document.getElementById('hinta').innerText)
+            };
+
+            console.log('Lähetettävä varaus:', varaus);
+
+            try {
+                const res = await fetch(`${API}/api/booking`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(varaus)
+                });
+
+                if (!res.ok) {
+                    const errorData = await res.json();
+                    throw new Error(errorData.error || errorData.message || `HTTP ${res.status}`);
+                }
+
+                const data = await res.json();
+                naytaViestiBooking('✅ Varaus tehty onnistuneesti!', 'success');
+                
+                // Nollaa lomake
+                document.getElementById('etunimi').value = '';
+                document.getElementById('sukunimi').value = '';
+                document.getElementById('booking-email').value = '';
+                document.getElementById('booking-phone').value = '';
+                document.getElementById('palvelu').value = '';
+                document.getElementById('elain').value = '';
+                document.getElementById('alkupvm').value = '';
+                document.getElementById('loppupvm').value = '';
+
+                setTimeout(() => naytaDashboard(), 2000);
+            } catch(err) {
+                console.error(err);
+                naytaViestiBooking(`❌ Varaus epäonnistui: ${err.message}`, 'error');
+            }
+        }
+
+        // ===== DASHBOARD =====
+        async function naytaDashboard() {
+            const token = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+            const username = localStorage.getItem('username');
+
+            if (!token || !userId) {
+                naytaKirjautuminen();
+                return;
+            }
+
+            // Päivitä navigation
+            document.getElementById('user-info').innerText = `👤 ${username}`;
+            document.getElementById('user-info').style.display = 'block';
+            document.getElementById('login-btn').style.display = 'none';
+            document.getElementById('varaukset-btn').style.display = 'inline-block';
+            document.getElementById('dashboard-btn').style.display = 'inline-block';
+            document.getElementById('logout-btn').style.display = 'inline-block';
+
+            // Näytä dashboard
+            piilotaKaikki();
+            document.getElementById('dashboard').classList.add('active');
+
+            try {
+                const res = await fetch(`${API}/api/booking/user/${userId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+                const varaukset = await res.json();
+                const lista = document.getElementById('varaukset-lista');
+
+                if (!varaukset || varaukset.length === 0) {
+                    lista.innerHTML = '<div class="empty-message">Ei varauksia vielä. <a onclick="naytaVaraukset()" style="color: #ff69b4; cursor: pointer;">Tee ensimmäinen varaus!</a></div>';
+                    return;
+                }
+
+                lista.innerHTML = varaukset.map(v => `
+                    <div class="varaus-kortti">
+                        <strong>${v.serviceType === 'hotelli' ? '🏨 Hotelli' : '🏠 Hoitola'}</strong>
+                            <p>Eläin: ${v.animalSpecies || ''}</p>
+                        <p>📅 ${new Date(v.startDate).toLocaleDateString('fi-FI')} → ${new Date(v.endDate).toLocaleDateString('fi-FI')}</p>
+                        <p>💰 ${v.totalPrice}€</p>
+                        <span class="varaus-status ${v.status}">${v.status === 'confirmed' ? '✅ Vahvistettu' : '⏳ Odottaa'}</span>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                document.getElementById('varaukset-lista').innerHTML = '<div class="empty-message">❌ Varausten haku epäonnistui</div>';
+            }
+        }
+
+        // ===== NÄKYMIEN VAIHTO =====
+        function piilotaKaikki() {
+            document.querySelectorAll('.auth-section, .booking-section, .dashboard-section').forEach(el => {
+                el.classList.remove('active');
+            });
+        }
+
+        function naytaKirjautuminen() {
+            piilotaKaikki();
+            document.getElementById('kirjautuminen').classList.add('active');
+            document.getElementById('user-info').style.display = 'none';
+            document.getElementById('login-btn').style.display = 'inline-block';
+            document.getElementById('varaukset-btn').style.display = 'none';
+            document.getElementById('dashboard-btn').style.display = 'none';
+            document.getElementById('logout-btn').style.display = 'none';
+        }
+
+        function naytaRekisterointi() {
+            piilotaKaikki();
+            document.getElementById('rekisterointi').classList.add('active');
+        }
+
+        function naytaVaraukset() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                naytaKirjautuminen();
+                return;
+            }
+            piilotaKaikki();
+            document.getElementById('varaus').classList.add('active');
+            
+            // Täytä sähköposti automaattisesti
+            const email = localStorage.getItem('email');
+            if (email) {
+                document.getElementById('booking-email').value = email;
+            }
+            
+            haeElaimet();
+        }
+
+        function kirjauduUlos() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('username');
+            localStorage.removeItem('email');
+            naytaKirjautuminen();
+        }
+
+        // ===== VIESTIT =====
+        function naytaViestiAuth(id, teksti, tyyppi) {
+            const el = document.getElementById(id);
+            el.className = `auth-message ${tyyppi}`;
+            el.style.display = 'block';
+            el.innerText = teksti;
+        }
+
+        function naytaViestiBooking(teksti, tyyppi) {
+            const el = document.getElementById('booking-message');
+            el.className = `booking-message ${tyyppi}`;
+            el.style.display = 'block';
+            el.innerText = teksti;
+        }
+    </script>
+</body>
+</html>

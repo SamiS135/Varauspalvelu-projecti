@@ -123,24 +123,11 @@ let perusHinta = 0;
 
 // Hae eläimet API:sta
 async function haeElaimet() {
-    try {
-        const res = await fetch(`${API_URL}/api/animal`);
-        
-        if (!res.ok) {
-            throw new Error(`API virhe: ${res.status}`);
-        }
-        
-        const elaimet = await res.json();
-        const select = document.getElementById('elain');
-        select.innerHTML = '<option value="">-- Valitse eläin --</option>';
-        
-        elaimet.forEach(e => {
-            select.innerHTML += `<option value="${e.id}" data-species="${e.species}">${e.name} (${e.species})</option>`;
-        });
-    } catch(err) {
-        console.error('Eläinten haku epäonnistui:', err);
-        naytaViesti('❌ API ei vastaa - tarkista että API on käynnissä', 'error');
-    }
+    // Tarjoa suorat laji-valinnat: kissa tai koira
+    const select = document.getElementById('elain');
+    select.innerHTML = '<option value="">-- Valitse eläin --</option>';
+    select.innerHTML += `<option value="cat" data-species="cat">Kissa</option>`;
+    select.innerHTML += `<option value="dog" data-species="dog">Koira</option>`;
 }
 
 // Päivitä lomake palvelun mukaan
@@ -261,13 +248,14 @@ async function lahetaVaraus() {
         return;
     }
 
-    // Luo varaus-olio oikeassa formaatissa
+    // Luo varaus-olio oikeassa formaatissa (lähetetään animalSpecies)
+    const species = elainSelect.options[elainSelect.selectedIndex]?.getAttribute('data-species');
     const varaus = {
         firstName: etunimi,
         lastName: sukunimi,
         email: email,
         phone: puhelin,
-        animalId: parseInt(elainSelect.value),
+        animalSpecies: species,
         serviceType: palvelu,
         startDate: new Date(alkupvm + 'T00:00:00').toISOString(),  // ISO 8601 -formaatti
         endDate: new Date(loppupvm + 'T00:00:00').toISOString(),    // ISO 8601 -formaatti

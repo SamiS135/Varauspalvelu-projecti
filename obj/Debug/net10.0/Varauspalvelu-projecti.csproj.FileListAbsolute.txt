@@ -102,3 +102,12 @@ c:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\obj\buildcheck\runtimes\w
 c:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\obj\buildcheck\runtimes\win-x64\native\krb5_64.dll
 c:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\obj\buildcheck\runtimes\win-x64\native\krbcc64.dll
 c:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\obj\buildcheck\runtimes\win\lib\net8.0\System.Windows.Extensions.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\BCrypt.Net-Next.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\seppa\Documents\GitHub\Varauspalvelu-projecti\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
