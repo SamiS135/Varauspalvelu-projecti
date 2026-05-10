@@ -8,17 +8,15 @@ using ShelterBookingAPI;
 using ShelterBookingAPI.Models;
 using System.Text;
 
-// Luodaan web-sovellus ASP.NET Core:n avulla
 var builder = WebApplication.CreateBuilder(args);
 
-// Rekisteröidään DatabaseHelper palveluna, jotta sitä voidaan käyttää riippuvuuden injektoinnin kautta
-// Tämä tarkoittaa, että kaikki kontrollerit voivat pyytää DatabaseHelper-oliota
+// Rekisteröi DatabaseHelper palveluna
 builder.Services.AddScoped<DatabaseHelper>();
 
-// Lisätään Controllers-tuki (AuthController ja muut)
+// Lisää Controllers-tuki
 builder.Services.AddControllers();
 
-// Lisätään JWT-autentikointi
+// Aseta JWT-autentikointi
 var secretKey = "LemmikkihoitolaHaapasenHuvila2024!";
 var key = Encoding.UTF8.GetBytes(secretKey);
 
@@ -37,7 +35,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// Lisätään OpenAPI dokumentaation tuki (Swagger)
+// Lisää Swagger API dokumentaatio
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(config =>
 {
@@ -46,20 +44,17 @@ builder.Services.AddOpenApiDocument(config =>
     config.Version = "v1";
 });
 
-// Lisätään CORS-tuki (Cross-Origin Resource Sharing) jotta WordPress-sivu voi kutsua tätä API:a
-// AllowAnyOrigin = sallii pyynnöt mistä tahansa osoitteesta
+// Lisää CORS (sallii pyynnöt eri alkuperistä)
 builder.Services.AddCors(options => {
     options.AddPolicy("AllowWordPress", policy => {
-        policy.AllowAnyOrigin()              // Sallii mistä tahansa alkuperästä
-              .AllowAnyHeader()               // Sallii kaikki HTTP-otsikot
-              .AllowAnyMethod();              // Sallii kaikki HTTP-metodit (GET, POST, DELETE jne)
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
     });
 });
 
-// Rakennetaan sovellus
+// Rakenna sovellus
 var app = builder.Build();
 
-// Jos sovellus on kehitystilassa, käytetään Swagger-dokumentaatiota
+// Kehitystilassa: käytä Swaggeria
 if (app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
@@ -72,21 +67,17 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Otetaan CORS-käytäntö käyttöön
+// Aktivoi CORS
 app.UseCors("AllowWordPress");
 
-// Lisätään autentikointi ja autorisointi
+// Aktivoi autentikointi ja autorisointi
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Rekisteröidään kontrollerit (AuthController, BookingController jne)
+// Rekisteröi kontrollerit
 app.MapControllers();
 
-// Määritellään API-reitit (URL-polut joita WordPress-sivu voi kutsua)
-// Note: API endpoints are provided by controllers in ShelterBookingAPI.Controllers
-// The minimal API route mappings were removed to avoid duplicate route registrations
-// which caused AmbiguousMatchException on /api/animal etc.
-
-// Sovellus kuuntelee oletusporia (5000 tai 5001)
+// API-päätepisteet tulevat kontrollereista
 app.Run();
+app.MapControllers();
 

@@ -1,69 +1,16 @@
 namespace ShelterBookingAPI.Models;
 
-/// <summary>
-/// Booking-malli edustaa varaustoimitusta varaussysteemissä
-/// Sisältää tiedot asiakkaasta, varattavasta eläimestä ja varauksen yksityiskohdista
-/// </summary>
 public class Booking {
-    /// <summary>
-    /// Varauksen yksilöllinen tunnusnumero tietokannassa
-    /// </summary>
-    public int Id { get; set; }
-    
-    /// <summary>
-    /// Asiakkaan etunimi
-    /// </summary>
-    public string? FirstName { get; set; }
-    
-    /// <summary>
-    /// Asiakkaan sukunimi
-    /// </summary>
-    public string? LastName { get; set; }
-    
-    /// <summary>
-    /// Asiakkaan sähköpostiosoite (yhteystieto)
-    /// </summary>
-    public string? Email { get; set; }
-    
-    /// <summary>
-    /// Asiakkaan puhelinnumero (yhteystieto)
-    /// </summary>
-    public string? Phone { get; set; }
-    
-    /// <summary>
-    /// Viittaus varauksen tekijään (User.Id)
-    /// </summary>
-    public int UserId { get; set; }
-    
-    /// <summary>
-    /// Varattavan eläimen laji (esim. "cat", "dog").
-    /// Käytetään kun käyttäjä valitsee eläinlomakkeelta lajin.
-    /// </summary>
-    public string? AnimalSpecies { get; set; }
-    
-    /// <summary>
-    /// Palvelutyyppi (esim. "grooming"=kylpeminen, "training"=koulutus, "daycare"=päivähoito)
-    /// </summary>
-    public string? ServiceType { get; set; }
-    
-    /// <summary>
-    /// Varauksen alkamispäivä ja aika
-    /// </summary>
-    public DateTime StartDate { get; set; }
-    
-    /// <summary>
-    /// Varauksen päättymispäivä ja aika
-    /// </summary>
-    public DateTime EndDate { get; set; }
-    
-    /// <summary>
-    /// Varauksen kokonaishinta euroissa
-    /// </summary>
-    public decimal TotalPrice { get; set; }
-    
-    /// <summary>
-    /// Varauksen tila oletuksena "pending" (odottava)
-    /// Mahdolliset arvot: "pending", "confirmed", "completed", "cancelled"
-    /// </summary>
-    public string? Status { get; set; } = "pending";
+    public int Id { get; set; } // Varauksen ID
+    public string? FirstName { get; set; } // Asiakkaan etunimi
+    public string? LastName { get; set; } // Asiakkaan sukunimi
+    public string? Email { get; set; } // Asiakkaan sähköposti
+    public string? Phone { get; set; } // Asiakkaan puhelinnumero
+    public int UserId { get; set; } // Käyttäjän ID
+    public string? AnimalSpecies { get; set; } // Eläimen laji (cat/dog)
+    public string? ServiceType { get; set; } // Palvelutyyppi (hoitola/hotelli)
+    public DateTime StartDate { get; set; } // Varauksen alkamispäivä
+    public DateTime EndDate { get; set; } // Varauksen loppupäivä
+    public decimal TotalPrice { get; set; } // Kokonaishinta
+    public string? Status { get; set; } = "pending"; // Tila: pending/confirmed/completed/cancelled
 }
