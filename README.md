@@ -1,6 +1,5 @@
 VS code extensions:
 C# dev kit
-PHP intelephense
 MySQL
 Gitlens
 
@@ -9,6 +8,7 @@ XAMPP
 wordpress kolun serveri
 .net sdk
 github desktop
+XAMPP
 
 
 ## Koulussa käynnistäminen
