@@ -1,0 +1,6 @@
+@Varauspalvelu_projecti_HostAddress = http://localhost:5144
+
+GET {{Varauspalvelu_projecti_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
