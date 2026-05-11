@@ -10,15 +10,12 @@ wordpress kolun serveri
 .net sdk
 github desktop
 
-En oo ihan varma viel mitä tarvii, mut tossa on jotain mitä AI sano et vois tarvita
 
 ## Koulussa käynnistäminen
 
-Tämä projekti toimii niin, että WordPress-sivu pyörii koulun palvelimella ja ASP.NET API + MySQL-tietokanta pyörii tällä koneella.
+Tämä projekti toimii niin, että WordPress-sivu pyörii koulun palvelimella ja ASP.NET API + MySQL-tietokanta omalla koneella.
 
 ### 1. Käynnistä MySQL
-
-Jos käytät XAMPP:ia:
 
 1. Avaa XAMPP Control Panel.
 2. Käynnistä `Apache` ja `MySQL`.
