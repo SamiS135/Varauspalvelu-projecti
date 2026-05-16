@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Palvelut</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --cream: #faf6f0;
+      --warm: #f0e8d8;
+      --brown: #5c3d2e;
+      --amber: #c8853a;
+      --green: #3a6b4a;
+      --teal: #2e5c5a;
+      --light-teal: #e4f0ef;
+      --text: #2a1f1a;
+      --muted: #7a6a60;
+      --border: #d9cfc4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      padding: 60px 20px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .page-header .eyebrow {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 12px;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      color: var(--brown);
+      line-height: 1.15;
+    }
+
+    .page-header .subtitle {
+      margin-top: 14px;
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--amber), var(--green));
+      margin: 20px auto 0;
+      border-radius: 2px;
+    }
+
+    .sections-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 50px;
+    }
+
+    .section {
+      background: #fff;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(92,61,46,0.08);
+      border: 1px solid var(--border);
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .section:nth-child(2) { animation-delay: 0.1s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 28px 36px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header.hoitola { background: linear-gradient(135deg, #fff8f0 0%, #fdefd8 100%); }
+    .section-header.hotelli { background: linear-gradient(135deg, #f0f7f6 0%, #d8eeec 100%); }
+
+    .section-icon { font-size: 2rem; line-height: 1; }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--brown);
+    }
+
+    .section-title.hotelli-title { color: var(--teal); }
+
+    .section-desc {
+      padding: 24px 36px 0;
+      font-size: 0.97rem;
+      color: var(--muted);
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 680px;
+    }
+
+    .species-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    @media (max-width: 600px) {
+      .species-grid { grid-template-columns: 1fr; }
+      .species-col:first-child { border-bottom: 1px solid var(--border); border-right: none !important; }
+      .section-header { padding: 22px 22px; }
+      .section-desc { padding: 20px 22px 0; }
+      .species-col { padding: 22px 22px; }
+    }
+
+    .species-col {
+      padding: 28px 36px;
+    }
+
+    .species-col:first-child {
+      border-right: 1px solid var(--border);
+    }
+
+    .species-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .species-label span { font-size: 1.1rem; }
+
+    .service-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px dashed var(--border);
+    }
+
+    .service-row:last-child { border-bottom: none; }
+
+    .service-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .hoitola .service-dot { background: var(--amber); }
+    .hotelli .service-dot { background: var(--teal); }
+
+    .service-text { }
+
+    .service-name {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .service-detail {
+      font-size: 0.83rem;
+      color: var(--muted);
+      font-weight: 300;
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header class="page-header">
+    <p class="eyebrow">Mitä tarjoamme</p>
+    <h1>Palvelumme</h1>
+    <p class="subtitle">Ammattitaitoista hoitoa kissoille &amp; koirille</p>
+    <div class="divider"></div>
+  </header>
+
+  <div class="sections-wrap">
+
+    <!-- HOITOLA -->
+    <div class="section">
+      <div class="section-header hoitola">
+        <span class="section-icon">✂️</span>
+        <h2 class="section-title">Hoitola</h2>
+      </div>
+      <p class="section-desc">
+        Ammattitaitoiset hoitajamme pitävät huolen lemmikkisi hyvinvoinnista ja siisteydestä. 
+        Kaikki hoitopalvelut tehdään rauhallisessa ja turvallisessa ympäristössä.
+      </p>
+      <div class="species-grid hoitola">
+        <div class="species-col">
+          <div class="species-label"><span>🐱</span> Kissat</div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Perushoito</div>
+              <div class="service-detail">Pesu, kuivaus, harjaus ja yleinen siistiminen.</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Silmien puhdistus</div>
+              <div class="service-detail">Huolellinen silmäkulmien puhdistus tarpeen mukaan.</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Kynsinleikkaus</div>
+              <div class="service-detail">Turvallinen kynsien lyhennys ammattilaisvälineillä.</div>
+            </div>
+          </div>
+        </div>
+        <div class="species-col">
+          <div class="species-label"><span>🐶</span> Koirat</div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Perushoito</div>
+              <div class="service-detail">Pesu, kuivaus, harjaus ja yleinen siistiminen.</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Silmien puhdistus</div>
+              <div class="service-detail">Huolellinen silmäkulmien puhdistus tarpeen mukaan.</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Kynsinleikkaus</div>
+              <div class="service-detail">Turvallinen kynsien lyhennys ammattilaisvälineillä.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOTELLI -->
+    <div class="section">
+      <div class="section-header hotelli">
+        <span class="section-icon">🏠</span>
+        <h2 class="section-title hotelli-title">Hotelli</h2>
+      </div>
+      <p class="section-desc">
+        Lemmikkihotellimme tarjoaa kodinomaiset ja turvalliset puitteet lemmikillesi 
+        silloin, kun olet poissa kotoa. Jokainen eläin saa yksilöllistä huomiota koko vierailun ajan.
+      </p>
+      <div class="species-grid hotelli">
+        <div class="species-col">
+          <div class="species-label"><span>🐱</span> Kissat</div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Yöpyminen</div>
+              <div class="service-detail">Oma rauhallinen tila, leikkimahdollisuudet ja päivittäinen hoito.</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Erityisruoka</div>
+              <div class="service-detail">Kissan erityistarpeiden mukainen ruokavalio sovittuna etukäteen.</div>
+            </div>
+          </div>
+        </div>
+        <div class="species-col">
+          <div class="species-label"><span>🐶</span> Koirat</div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Yöpyminen</div>
+              <div class="service-detail">Tilava majoitus, ulkoilutukset ja yksilöllinen huomio.</div>
+            </div>
+          </div>
+          <div class="service-row">
+            <div class="service-dot"></div>
+            <div class="service-text">
+              <div class="service-name">Erityisruoka</div>
+              <div class="service-detail">Koiran erityistarpeiden mukainen ruokavalio sovittuna etukäteen.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="footer-note">Lisätiedoista ja hinnoista ota yhteyttä — autamme mielellämme!</p>
+
+</body>
+</html>

@@ -1,74 +1,92 @@
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using MySql.Data.MySqlClient;
+using NSwag.AspNetCore;
+using ShelterBookingAPI;
+using ShelterBookingAPI.Models;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+// Sovelluksen entry-point (top-level statements).
+// Tämä tiedosto konfiguroi palvelut (DI), autentikoinnin, Swaggerin ja CORS-politiikat.
+// Tärkeimmät symbolit:
+// - `builder` : sovelluksen rakennin, sisältää Configuration-objektin
+// - `secretKey` : JWT:n allekirjoitusavain (luetaan asetuksista)
+// - `key` : UTF8-bytit allekirjoitusavaimesta, käytetään TokenValidationParameters
+
+// Rekisteröi DatabaseHelper palveluna
+builder.Services.AddScoped<DatabaseHelper>();
+
+var secretKey = builder.Configuration["Jwt:SecretKey"]
+    ?? throw new InvalidOperationException("Jwt:SecretKey puuttuu asetuksista.");
+
+// Lisää Controllers-tuki
+builder.Services.AddControllers();
+
+// Aseta JWT-autentikointi
+var key = Encoding.UTF8.GetBytes(secretKey);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true
+        };
+    });
+
+builder.Services.AddAuthorization();
+
+// Lisää Swagger API dokumentaatio
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApiDocument(config =>
 {
-    config.DocumentName = "TodoAPI";
-    config.Title = "TodoAPI v1";
+    config.DocumentName = "ShelterBookingAPI";
+    config.Title = "ShelterBookingAPI v1";
     config.Version = "v1";
 });
+
+// Lisää CORS (sallii pyynnöt eri alkuperistä)
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowWordPress", policy => {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
+
+// Rakenna sovellus
 var app = builder.Build();
+
+// Kehitystilassa: käytä Swaggeria
 if (app.Environment.IsDevelopment())
 {
     app.UseOpenApi();
     app.UseSwaggerUi(config =>
     {
-        config.DocumentTitle = "TodoAPI";
+        config.DocumentTitle = "ShelterBookingAPI";
         config.Path = "/swagger";
         config.DocumentPath = "/swagger/{documentName}/swagger.json";
         config.DocExpansion = "list";
     });
 }
 
-app.MapGet("/todoitems", async (TodoDb db) =>
-    await db.Todos.ToListAsync());
+// Aktivoi CORS
+app.UseCors("AllowWordPress");
 
-app.MapGet("/todoitems/complete", async (TodoDb db) =>
-    await db.Todos.Where(t => t.IsComplete).ToListAsync());
+// Aktivoi autentikointi ja autorisointi
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapGet("/todoitems/{id}", async (int id, TodoDb db) =>
-    await db.Todos.FindAsync(id)
-        is Todo todo
-            ? Results.Ok(todo)
-            : Results.NotFound());
+// Rekisteröi kontrollerit
+app.MapControllers();
 
-app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
-{
-    db.Todos.Add(todo);
-    await db.SaveChangesAsync();
-
-    return Results.Created($"/todoitems/{todo.Id}", todo);
-});
-
-app.MapPut("/todoitems/{id}", async (int id, Todo inputTodo, TodoDb db) =>
-{
-    var todo = await db.Todos.FindAsync(id);
-
-    if (todo is null) return Results.NotFound();
-
-    todo.Name = inputTodo.Name;
-    todo.IsComplete = inputTodo.IsComplete;
-
-    await db.SaveChangesAsync();
-
-    return Results.NoContent();
-});
-
-app.MapDelete("/todoitems/{id}", async (int id, TodoDb db) =>
-{
-    if (await db.Todos.FindAsync(id) is Todo todo)
-    {
-        db.Todos.Remove(todo);
-        await db.SaveChangesAsync();
-        return Results.NoContent();
-    }
-
-    return Results.NotFound();
-});
-
+// API-päätepisteet tulevat kontrollereista
 app.Run();
+app.MapControllers();
+
