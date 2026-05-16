@@ -11,13 +11,18 @@ namespace ShelterBookingAPI.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase {
-    // Salasalaisanalle
+    // Tietokantayhteyksiä tarjoava apuluokka (DI)
     private readonly DatabaseHelper db;
+    // JWT-salaisuusavain: luetaan konstruktorissa `IConfiguration`-objektista
+    // Käytetään tokenin luontiin (`LuoToken`) ja vastaavasti validaatiossa
     private readonly string secretKey;
 
-    // Konstruktori
+    // Konstruktori: riippuvuuksien injektio
+    // - `DatabaseHelper db` : tietokantayhteyksiin
+    // - `IConfiguration configuration` : lukee `appsettings.json`/ympäristöasetukset
     public AuthController(DatabaseHelper db, IConfiguration configuration) {
         this.db = db;
+        // Haetaan JWT-allekirjoitusavain asetuksista: "Jwt:SecretKey"
         secretKey = configuration["Jwt:SecretKey"]
             ?? throw new InvalidOperationException("Jwt:SecretKey puuttuu asetuksista.");
     }
@@ -25,6 +30,9 @@ public class AuthController : ControllerBase {
     // Rekisteröi uusi käyttäjä
     [HttpPost("register")]
     public IActionResult Register([FromBody] User user) {
+        // Rekisteröi uusi käyttäjä tietokantaan
+        // Tärkeimmät kentät: username, email, password (talletetaan hashattuna), phone
+        // Tarkistetaan ensin, ettei sähköposti ole jo rekisteröity
         using var conn = db.GetConnection();
         conn.Open();
 
@@ -58,6 +66,8 @@ public class AuthController : ControllerBase {
     // Kirjaudu sisään
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginRequest request) {
+        // Kirjautuminen: hakee käyttäjän emaililla, tarkistaa salasanan
+        // ja palauttaa JWT-tokenin (jos tunnistus onnistuu).
         using var conn = db.GetConnection();
         conn.Open();
 
@@ -98,14 +108,19 @@ public class AuthController : ControllerBase {
 
     // Luo JWT-token käyttäjälle
     private string LuoToken(User user) {
+        // Luo tokenin allekirjoittamiseen tarvittavat arvot
         var key   = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        // Tokeniin tallennetaan userId ja username
+
+        // Tokenin claims: säilytetään vähimmäistiedot, joita API käyttää
+        // - userId : tunnistaa käyttäjän palvelinpuolella
+        // - username : käytettävä näkyvissä käyttäjänimen näyttöön
         var claims = new[] {
             new Claim("userId",   user.Id.ToString()),
             new Claim("username", user.Username ?? "")
         };
-        // Token voimassa 7 päivää
+
+        // Tokenin elinikä: 7 päivää (voidaan muuttaa asetukseksi myöhemmin)
         var token = new JwtSecurityToken(
             claims:            claims,
             expires:           DateTime.Now.AddDays(7),
