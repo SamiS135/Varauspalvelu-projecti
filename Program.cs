@@ -13,11 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Rekisteröi DatabaseHelper palveluna
 builder.Services.AddScoped<DatabaseHelper>();
 
+var secretKey = builder.Configuration["Jwt:SecretKey"]
+    ?? throw new InvalidOperationException("Jwt:SecretKey puuttuu asetuksista.");
+
 // Lisää Controllers-tuki
 builder.Services.AddControllers();
 
 // Aseta JWT-autentikointi
-var secretKey = "LemmikkihoitolaHaapasenHuvila2024!";
 var key = Encoding.UTF8.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
