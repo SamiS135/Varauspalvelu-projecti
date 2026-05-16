@@ -13,11 +13,13 @@ namespace ShelterBookingAPI.Controllers;
 public class AuthController : ControllerBase {
     // Salasalaisanalle
     private readonly DatabaseHelper db;
-    private string secretKey = "LemmikkihoitolaHaapasenHuvila2024!";
+    private readonly string secretKey;
 
     // Konstruktori
-    public AuthController(DatabaseHelper db) {
+    public AuthController(DatabaseHelper db, IConfiguration configuration) {
         this.db = db;
+        secretKey = configuration["Jwt:SecretKey"]
+            ?? throw new InvalidOperationException("Jwt:SecretKey puuttuu asetuksista.");
     }
 
     // Rekisteröi uusi käyttäjä

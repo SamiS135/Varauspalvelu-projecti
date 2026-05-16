@@ -1,0 +1,38 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio / VS Code
+.vs/
+.vscode/
+*.user
+*.suo
+*.rsuser
+*.userosscache
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.cache
+
+# Test and publish output
+TestResults/
+publish/
+wwwroot/dist/
+
+# .NET artifacts
+*.nupkg
+*.snupkg
+*.pdb
+*.mdb
+
+# Local environment overrides
+appsettings.Development.json
+.env
+.env.*
+
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
