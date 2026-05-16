@@ -79,3 +79,20 @@ Jos sivu ajetaan koulun palvelimelta eikä samalla koneella kuin API, tuo osoite
 - `dotnet run` päällä
 - WordPress-sivulla oikea API-osoite
 - Käyttäjä kirjautunut sisään ennen varausta
+
+
+-------------------------------
+Työn jako API
+- Sanna anto pohja koodin apin 
+- Sami lisäsi ja muokkasin api koodia
+
+- käynii yhdessä läpi
+
+- Sanna poisti ylimääräsiä tiedostoja ja teki cleanup työtä
+- Sami paransi sala avainta Ja lisäsi kommentteja
+
+- käytiin yhdessä läpi 16.5
+
+-
+-------------------------------
+

@@ -1,0 +1,107 @@
+<!--
+  WordPress Hinnastosivu (HTML + JS)
+  - Tämä on itsenäinen HTML-esimerkki, jonka voit upottaa WordPressin 'Custom HTML' -lohkoon
+  - Hakee hinnat backend-API:sta (esim. /api/price/{species}/{service}) ja renderöi ne
+  - Muokkaa `API_BASE`-muuttujaa ympäristöösi sopivaksi
+-->
+<!doctype html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hinnasto — Varauspalvelut</title>
+  <style>
+    body{font-family:Segoe UI,Arial,sans-serif;padding:20px;background:#f7f7fb}
+    .card{background:#fff;padding:16px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.06);max-width:900px;margin:12px auto}
+    h1{color:#333}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    select,button{padding:8px;border-radius:6px;border:1px solid #ddd}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px;border-bottom:1px solid #eee;text-align:left}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Hinnasto</h1>
+    <p>Tämä näkymä hakee hinnat backendistä ja näyttää ne taulukossa.</p>
+
+    <!-- Kontrollerit: laji ja palvelutyyppi -->
+    <div class="controls">
+      <label>
+        Laji:
+        <select id="species">
+          <option value="">-- Valitse --</option>
+          <option value="cat">Kissa</option>
+          <option value="dog">Koira</option>
+        </select>
+      </label>
+
+      <label>
+        Palvelu:
+        <select id="serviceType">
+          <option value="">-- Valitse --</option>
+          <option value="hoitola">Hoitola</option>
+          <option value="hotelli">Hotelli</option>
+        </select>
+      </label>
+
+      <button id="loadBtn">Lataa hinnat</button>
+    </div>
+
+    <div id="output">
+      <p>Valitse laji ja palvelu, sitten paina "Lataa hinnat".</p>
+    </div>
+  </div>
+
+  <script>
+    // Muokkaa backend-URL:ia tarpeen mukaan
+    const API_BASE = window.API_BASE || 'http://localhost:5144';
+
+    const loadBtn = document.getElementById('loadBtn');
+    loadBtn.addEventListener('click', async () => {
+      const species = document.getElementById('species').value;
+      const serviceType = document.getElementById('serviceType').value;
+      const out = document.getElementById('output');
+
+      if (!species || !serviceType) {
+        out.innerHTML = '<p style="color:#b00">Valitse sekä laji että palvelu.</p>';
+        return;
+      }
+
+      out.innerHTML = '<p>Ladataan…</p>';
+
+      try {
+        // Oletetaan backend-endpoint: /api/price/{species}/{serviceType}
+        const res = await fetch(`${API_BASE}/api/price/${encodeURIComponent(species)}/${encodeURIComponent(serviceType)}`);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const prices = await res.json();
+
+        if (!Array.isArray(prices) || prices.length === 0) {
+          out.innerHTML = '<p>Ei hintoja näille valinnoille.</p>';
+          return;
+        }
+
+        // Renderöi taulukko
+        const rows = prices.map(p => `
+          <tr>
+            <td>${p.serviceName || p.ServiceName || ''}</td>
+            <td>${(p.amount ?? p.Amount ?? 0).toFixed ? (p.amount ?? p.Amount ?? 0).toFixed(2) : p.amount}</td>
+            <td>${p.serviceType || p.ServiceType || ''}</td>
+          </tr>
+        `).join('\n');
+
+        out.innerHTML = `
+          <table>
+            <thead><tr><th>Palvelu</th><th>Hinta (€)</th><th>Tyyppi</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+
+      } catch (err) {
+        console.error(err);
+        out.innerHTML = `<p style="color:#b00">Virhe haettaessa hintoja: ${err.message}</p>`;
+      }
+    });
+  </script>
+</body>
+</html>

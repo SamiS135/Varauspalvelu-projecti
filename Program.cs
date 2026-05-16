@@ -10,6 +10,13 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Sovelluksen entry-point (top-level statements).
+// Tämä tiedosto konfiguroi palvelut (DI), autentikoinnin, Swaggerin ja CORS-politiikat.
+// Tärkeimmät symbolit:
+// - `builder` : sovelluksen rakennin, sisältää Configuration-objektin
+// - `secretKey` : JWT:n allekirjoitusavain (luetaan asetuksista)
+// - `key` : UTF8-bytit allekirjoitusavaimesta, käytetään TokenValidationParameters
+
 // Rekisteröi DatabaseHelper palveluna
 builder.Services.AddScoped<DatabaseHelper>();
 

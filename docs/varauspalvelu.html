@@ -306,6 +306,12 @@
 </head>
 <body>
     <!-- NAVIGATION -->
+    <!--
+        Navigaatio: sisältää kirjautumis-/logout-painikkeet ja käyttäjätiedot
+        Tärkeimmät elementit:
+        - #user-info : näyttää käyttäjänimen kun kirjautunut
+        - #login-btn / #logout-btn : tilanvaihto riippuen auth-tilasta
+    -->
     <nav>
         <h1>🐾 Eläinsuojan Varauspalvelu</h1>
         <div class="nav-buttons">
@@ -321,6 +327,12 @@
     <div class="container">
 
         <!-- ===== KIRJAUTUMINEN ===== -->
+        <!--
+            Kirjautumisosio
+            - ID: `kirjautuminen`
+            - Käyttäjän syöttämät kentät: login-email, login-password
+            - Funktio joka hoitaa lähetyksen: `kirjaudu()` (JS)
+        -->
         <div class="auth-section active" id="kirjautuminen">
             <h2>Kirjaudu sisään</h2>
             <div class="auth-message" id="login-message"></div>
@@ -343,6 +355,11 @@
         </div>
 
         <!-- ===== REKISTERÖINTI ===== -->
+        <!--
+            Rekisteröinti: lomake uuden käyttäjän luomiseen
+            - ID: `rekisterointi`
+            - Funktio: `rekisteroidy()` (JS)
+        -->
         <div class="auth-section" id="rekisterointi">
             <h2>Rekisteröidy</h2>
             <div class="auth-message" id="register-message"></div>
@@ -375,6 +392,13 @@
         </div>
 
         <!-- ===== VARAUSLOMAKE ===== -->
+        <!--
+            Varauslomake
+            - ID: `varaus`
+            - Kentät: etunimi, sukunimi, booking-email, booking-phone, palvelu, elain, alkupvm, loppupvm
+            - Lähetysfunktio: `lahetaVaraus()` (JS) joka tekee POST /api/booking
+            - Näppärät muuttujat JS: `perusHinta`, `valitutPalvelut` (lasketaan hinnat)
+        -->
         <div class="booking-section" id="varaus">
             <h2>🐾 Tee uusi varaus</h2>
             <div class="booking-message" id="booking-message"></div>
@@ -445,6 +469,9 @@
     </div>
 
     <script>
+        // Peruskonfiguraatio
+        // - `API` : backendin base-URL
+        // - `token` : JWT talletetaan localStorageen avaimella 'token'
         const API = 'http://localhost:5144';
         let valitutPalvelut = [];
         let perusHinta = 0;
@@ -499,6 +526,8 @@
             }
         }
 
+        // Rekisteröi uusi käyttäjä API:lle
+        // Lähettää JSON: { username, email, password, phone }
         async function rekisteroidy() {
             const username = document.getElementById('register-username').value.trim();
             const email = document.getElementById('register-email').value.trim();
@@ -553,6 +582,8 @@
             select.value = '';
         }
 
+        // Päivittää lomakkeen näkymän valitun palvelun mukaan
+        // Esim. hotelli vaatii loppupäivän
         function paivitaLomake() {
             const palvelu = document.getElementById('palvelu').value;
             const loppupvm = document.getElementById('loppupvm-div');
@@ -568,6 +599,8 @@
             haeHinnat();
         }
 
+        // Hakee hinnat backendistä endpointista `/api/price/{species}/{service}`
+        // Täyttää elementin #palvelut-lista lisäpalveluilla
         async function haeHinnat() {
             const palvelu = document.getElementById('palvelu').value;
             const elainSelect = document.getElementById('elain');
@@ -605,6 +638,7 @@
             }
         }
 
+        // Laskee valittujen palvelujen summan (perus + lisät)
         function laskeHinta() {
             let yhteensa = perusHinta;
             const checkboxes = document.querySelectorAll('#palvelut-lista input:checked');
@@ -614,6 +648,8 @@
             document.getElementById('hinta').innerText = yhteensa.toFixed(2);
         }
 
+        // Lähettää varauksen backendille. Varmistaa tokenin ja userId:n.
+        // JSON sisältää mm. userId, firstName, lastName, animalSpecies, serviceType, startDate, endDate, totalPrice
         async function lahetaVaraus() {
             const token = localStorage.getItem('token');
             const userIdStr = localStorage.getItem('userId');
